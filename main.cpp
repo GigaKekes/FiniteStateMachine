@@ -1,9 +1,4 @@
-﻿#include <iostream>
-
-#include "State.h"
-
-using namespace DeeterministicFSM;
-
+﻿
 int main()
 {
 	State firstState("First state");
