@@ -5,18 +5,45 @@
 
 namespace DeeterministicFSM
 {
-	template <typename StateTriggerType>
+	template <typename AssociatedObject>
 	class State
 	{
 	public:
-		State(std::string signature);
+		State(AssociatedObject signature);
+
+		unsigned int GetID();
+		AssociatedObject GetSignature();
 
 	private:
-		std::string _signature; // Classification of this State
+		AssociatedObject _signature; // Classification of this State
 		unsigned int _id; // ID of this State
+		static unsigned int _LatestID;
 	};
+	template<typename AssociatedObject>
+	DeeterministicFSM::State<AssociatedObject>::State(AssociatedObject signature)
+	{
+		_signature = signature;
+		_id = _LatestID;
+		_LatestID++;
+	}
+
+	template<typename AssociatedObject>
+	unsigned int DeeterministicFSM::State<AssociatedObject>::GetID()
+	{
+		return _id;
+	}
+
+	template<typename AssociatedObject>
+	AssociatedObject DeeterministicFSM::State<AssociatedObject>::GetSignature()
+	{
+		return _signature;
+	}
+
+	template<typename AssociatedObject>
+	unsigned int DeeterministicFSM::State<AssociatedObject>::_LatestID = 0;
 }
 
+#include "State.cpp"
 
 #endif // FINITESTATEMACHINE_STATE
 

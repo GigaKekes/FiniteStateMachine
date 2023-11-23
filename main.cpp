@@ -1,9 +1,14 @@
-﻿
+﻿#include <iostream>
+
+#include "State.h"
+
+using namespace DeeterministicFSM;
+
 int main()
 {
-	State firstState("First state");
-	State secondState("Second state");
-	State thirdState("Third state");
+	State<std::string> firstState("First state");
+	State<std::string> secondState("Second state");
+	State<std::string> thirdState("Third state");
 
 	std::cout << firstState.GetSignature() << " " << firstState.GetID() << std::endl;
 	std::cout << secondState.GetSignature() << " " << secondState.GetID() << std::endl;
