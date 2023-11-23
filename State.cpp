@@ -1,18 +1,21 @@
 #include "State.h"
 
 
-template<typename StateTriggerType>
-DeeterministicFSM::State<StateTriggerType>::State(std::string signature)
+DeeterministicFSM::State::State(std::string signature)
 {
 	_signature = signature;
+	_id = _latestId;
 	_latestId++;
 }
 
-template<typename StateTriggerType>
-std::string DeeterministicFSM::State<StateTriggerType>::GetSignature()
+std::string DeeterministicFSM::State::GetSignature()
 {
 	return _signature;
 }
 
-template<typename StateTriggerType>
-int DeeterministicFSM::State<StateTriggerType>::_latestId = 0;
+unsigned int DeeterministicFSM::State::GetID()
+{
+	return _id;
+}
+
+unsigned int DeeterministicFSM::State::_latestId = 0;
