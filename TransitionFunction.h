@@ -5,36 +5,53 @@
 
 namespace DeeterministicFSM
 {
-    template <typename AssociatedObject>
+    template <typename StateAssociatedObject, typename TriggerType>
     class Transition 
     {
     public:
-        Transition(State<AssociatedObject> fromState, State<AssociatedObject> toState, AssociatedObject trigger)
+        Transition() {}
+        Transition(State<StateAssociatedObject> fromState, State<StateAssociatedObject> toState, TriggerType trigger) :
+            _fromState(fromState), _toState(toState), _trigger(trigger) {}
+
+        Transition(const Transition<StateAssociatedObject, TriggerType>& other)
         {
-            _fromState = fromState;
-            _toState = toState;
-            _trigger = trigger
+            this->_fromState = other._fromState;
+            this->_toState = other._toState;
+            this->_trigger = other._trigger;
         }
 
-        State<AssociatedObject> getFromState() const 
+        ~Transition() {}
+
+        Transition& operator=(const Transition& other)
         {
-            return fromState;
+            if (this != &other)
+            {
+                _fromState = other._fromState;
+                _toState = other._toState;
+                _trigger = other._trigger;
+            }
+            return *this;
         }
 
-        State<AssociatedObject> getToState() const 
+        State<StateAssociatedObject> GetFromState()
         {
-            return toState;
+            return _fromState;
         }
 
-        AssociatedObject getTrigger() const 
+        State<StateAssociatedObject> GetToState()
         {
-            return trigger;
+            return _toState;
+        }
+
+        TriggerType GetTrigger() const
+        {
+            return _trigger;
         }
 
     private:
-        State<AssociatedObject> _fromState;
-        State<AssociatedObject> _toState;
-        AssociatedObject _trigger;
+        State<StateAssociatedObject> _fromState;
+        State<StateAssociatedObject> _toState;
+        TriggerType _trigger;
     };
 
 }

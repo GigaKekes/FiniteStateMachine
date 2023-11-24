@@ -5,35 +5,52 @@
 
 namespace DeeterministicFSM
 {
-	template <typename AssociatedObject>
+	template <typename StateAssociatedObject>
 	class State
 	{
 	public:
-		State(AssociatedObject signature)
+		State() {}
+		State(StateAssociatedObject signature) :
+			_signature(signature), _id(_LatestID)
 		{
-			_signature = signature;
-			_id = _LatestID;
 			_LatestID++;
 		}
 
-		unsigned int GetID()
+		State(const State<StateAssociatedObject>& other)
+		{
+				this->_signature = other._signature;
+				this->_id = other._id;
+		}
+		~State() {}
+
+		State& operator=(const State& other)
+		{
+			if (this != &other)
+			{
+				_signature = other._signature;
+				_id = other._id;
+			}
+			return *this;
+		}
+
+		unsigned int GetID() const
 		{
 			return _id;
 		}
 
-		AssociatedObject GetSignature()
+		StateAssociatedObject GetSignature()  const
 		{
 			return _signature;
 		}
 
 	private:
-		AssociatedObject _signature; // Classification of this State
+		StateAssociatedObject _signature; // Classification of this State
 		unsigned int _id; // ID of this State
 		static unsigned int _LatestID;
 	};
 
-	template<typename AssociatedObject>
-	unsigned int DeeterministicFSM::State<AssociatedObject>::_LatestID = 0;
+	template<typename StateAssociatedObject>
+	unsigned int DeeterministicFSM::State<StateAssociatedObject>::_LatestID = 0;
 }
 
 #endif // FSM_STATE
