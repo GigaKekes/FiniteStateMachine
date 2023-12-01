@@ -3,7 +3,6 @@
 
 #include <vector>
 
-
 #include "State.h"
 #include "TransitionFunction.h"
 
@@ -14,7 +13,7 @@ namespace DeeterministicFSM
     {
     public:
         DeterministicFSM(std::vector<State<StateAssociatedObject>> states, std::vector<Transition<StateAssociatedObject, TriggerType>> transitions, State<StateAssociatedObject> initialState) :
-            _states(states), _transitions(transitions), _currentState(initialState) {}
+            _states(states), _transitions(transitions), _currentState(initialState), _initialState(initialState) {}
 
         bool triggerEvent(TriggerType value)
         {
@@ -28,13 +27,53 @@ namespace DeeterministicFSM
             }
             return false;
         }
-
-        State<StateAssociatedObject> GetCurrentState() 
+        State<StateAssociatedObject> GetTriggeredChainState(std::vector<TriggerType> triggers)
         {
+            for (int i = 0; i < triggers.size(); i++)
+            {
+                if (triggerEvent(triggers[i]) == false)
+                {
+                    return _currentState;
+                }
+            }
             return _currentState;
         }
 
+        std::vector<StateAssociatedObject> GetTriggeredChainSignatures(std::vector<TriggerType> triggers)
+        {
+            std::vector<StateAssociatedObject> chain = {};
+            for (int i = 0; i < triggers.size(); i++)
+            {
+                if (triggerEvent(triggers[i]) == false)
+                {
+                    return chain;
+                }
+                chain.push_back(_currentState.GetSignature());
+            }
+            return chain;
+        }
+
+        std::vector<unsigned int> GetTriggeredChainIDs(std::vector<TriggerType> triggers)
+        {
+            std::vector<unsigned int> chain = {};
+            for (int i = 0; i < triggers.size(); i++)
+            {
+                if (triggerEvent(triggers[i]) == false)
+                {
+                    return chain;
+                }
+                chain.push_back(_currentState.GetID());
+            }
+            return chain;
+        }
+
+        void Restart()
+        {
+            _currentState = _initialState;
+        }
+
     private:
+        State<StateAssociatedObject> _initialState;
         State<StateAssociatedObject> _currentState;
         std::vector<State<StateAssociatedObject>> _states;
         std::vector<Transition<StateAssociatedObject, TriggerType>> _transitions;

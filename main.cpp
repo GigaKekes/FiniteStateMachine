@@ -1,24 +1,24 @@
 ﻿#include <iostream>
+#include <vector>
 
 #include "State.h"
 #include "TransitionFunction.h"
-#include <vector>
 #include "FiniteStateAutomata.h"
 
 using namespace DeeterministicFSM;
 
-void StateClassTemplateTest();
-void FindingStringPatternTest();
+void StateTemplateTest();
+void StringChainPatternTest();
 
 int main(int argc, char** argv)
 {
-	FindingStringPatternTest();
+	StringChainPatternTest();
 
 	return 0;
 }
 
 
-void StateClassTemplateTest()
+void StateTemplateTest()
 {
 	State<std::string> firstStringState("AAA");
 	State<std::string> secondStringState("BBB");
@@ -38,7 +38,7 @@ void StateClassTemplateTest()
 	std::cout << "Third Int State: " << thirdIntState.GetSignature() << " " << thirdIntState.GetID() << std::endl;
 }
 
-void FindingStringPatternTest()
+void StringChainPatternTest()
 {
 	// Constructing FSA for finding out if a string of symbols 1 and 0 contains "101" in it 
 
@@ -65,21 +65,38 @@ void FindingStringPatternTest()
 	Transition<bool, char> e(secondState, thirdState, '1');
 	Transition<bool, char> f(secondState, initialState, '0');
 
-	Transition<bool, char> g(thirdState, thirdState, '1');
-	Transition<bool, char> h(thirdState, thirdState, '0');
+	Transition<bool, char> g(thirdState, firstState, '1');
+	Transition<bool, char> h(thirdState, secondState, '0');
 
 
 	//Constructing FSA itself
-	DeterministicFSM<bool, char> fsm({initialState, firstState, secondState, thirdState }, {a,b,c,d,e,f,g,h}, initialState);
+	DeterministicFSM<bool, char> fsm({ initialState, firstState, secondState, thirdState }, { a,b,c,d,e,f,g,h }, initialState);
 
 
 	//Testing
-	fsm.triggerEvent('1');
-	std::cout << "Current State: " << fsm.GetCurrentState().GetSignature() << std::endl;
+	std::vector<char> s = {  '1', '0', '0', '0', '1', '1', '0', '0', '1', '1', '0', '0', '1', '1', '0', '0', '1', '0', '1', '1', '1', '0', '1', '0', '1', '0', '0', '0', '1', '0' };
+	
+	std::vector<bool> signs = fsm.GetTriggeredChainSignatures(s);
+	fsm.Restart();
+	std::vector<unsigned int> ids = fsm.GetTriggeredChainIDs(s);
+	fsm.Restart();
+	State<bool> laststate = fsm.GetTriggeredChainState(s);
+	
+	std::cout << "State signatures history:\t";
+	for (int i = 0; i < signs.size(); i++)
+	{
+		std::cout << signs[i];
+	}
 
-	fsm.triggerEvent('0');
-	std::cout << "Current State: " << fsm.GetCurrentState().GetSignature() << std::endl;
+	std::cout << std::endl;
 
-	fsm.triggerEvent('1');
-	std::cout << "Current State: " << fsm.GetCurrentState().GetSignature() << std::endl;
+	std::cout << "State IDs history:\t\t";
+	for (int i = 0; i < signs.size(); i++)
+	{
+		std::cout << ids[i];
+	}
+
+	std::cout << std::endl;
+
+	std::cout << "Last State : ID:" << laststate.GetID() << " Value:" << laststate.GetSignature();
 }
