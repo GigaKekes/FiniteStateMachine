@@ -27,17 +27,6 @@ namespace DeeterministicFSM
             }
             return false;
         }
-        State<StateAssociatedObject> GetTriggeredChainState(std::vector<TriggerType> triggers)
-        {
-            for (int i = 0; i < triggers.size(); i++)
-            {
-                if (triggerEvent(triggers[i]) == false)
-                {
-                    return _currentState;
-                }
-            }
-            return _currentState;
-        }
 
         std::vector<StateAssociatedObject> GetTriggeredChainSignatures(std::vector<TriggerType> triggers)
         {
@@ -67,6 +56,21 @@ namespace DeeterministicFSM
             return chain;
         }
 
+        bool Run(std::vector<TriggerType> triggers)
+        {
+            for (int i = 0; i < triggers.size(); i++)
+            {
+                if (triggerEvent(triggers[i]) == false)
+                {
+                    return false;
+                }
+                if (_currentState.GetTerminality())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         void Restart()
         {
             _currentState = _initialState;

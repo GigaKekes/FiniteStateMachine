@@ -10,8 +10,8 @@ namespace DeeterministicFSM
 	{
 	public:
 		State() {}
-		State(StateAssociatedObject signature) :
-			_signature(signature), _id(_LatestID)
+		State(StateAssociatedObject signature, bool isTerminal) :
+			_signature(signature), _id(_LatestID), _isTerminal(isTerminal)
 		{
 			_LatestID++;
 		}
@@ -20,6 +20,7 @@ namespace DeeterministicFSM
 		{
 				this->_signature = other._signature;
 				this->_id = other._id;
+				this->_isTerminal = other._isTerminal;
 		}
 		~State() {}
 
@@ -27,8 +28,9 @@ namespace DeeterministicFSM
 		{
 			if (this != &other)
 			{
-				_signature = other._signature;
-				_id = other._id;
+				this->_signature = other._signature;
+				this->_id = other._id;
+				this->_isTerminal = other._isTerminal;
 			}
 			return *this;
 		}
@@ -43,9 +45,15 @@ namespace DeeterministicFSM
 			return _signature;
 		}
 
+		bool GetTerminality() const
+		{
+			return _isTerminal;
+		}
+
 	private:
-		StateAssociatedObject _signature; // Classification of this State
-		unsigned int _id; // ID of this State
+		StateAssociatedObject _signature; // Classifies unique data of this State
+		unsigned int _id; // Represents ID of this State
+		bool _isTerminal; // Determines if class is in a set of final states
 		static unsigned int _LatestID;
 	};
 
