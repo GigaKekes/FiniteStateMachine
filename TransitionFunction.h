@@ -5,15 +5,15 @@
 
 namespace DeeterministicFSM
 {
-    template <typename StateAssociatedObject, typename TriggerType>
+    template <typename TriggerType>
     class Transition 
     {
     public:
         Transition() {}
-        Transition(State<StateAssociatedObject> fromState, State<StateAssociatedObject> toState, TriggerType trigger) :
+        Transition(State fromState, State toState, TriggerType trigger) :
             _fromState(fromState), _toState(toState), _trigger(trigger) {}
 
-        Transition(const Transition<StateAssociatedObject, TriggerType>& other)
+        Transition(const Transition<TriggerType>& other)
         {
             this->_fromState = other._fromState;
             this->_toState = other._toState;
@@ -33,12 +33,12 @@ namespace DeeterministicFSM
             return *this;
         }
 
-        State<StateAssociatedObject> GetFromState()
+        State GetFromState()
         {
             return _fromState;
         }
 
-        State<StateAssociatedObject> GetToState()
+        State GetToState()
         {
             return _toState;
         }
@@ -49,8 +49,8 @@ namespace DeeterministicFSM
         }
 
     private:
-        State<StateAssociatedObject> _fromState;
-        State<StateAssociatedObject> _toState;
+        State _fromState;
+        State _toState;
         TriggerType _trigger;
     };
 

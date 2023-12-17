@@ -8,11 +8,11 @@
 
 namespace DeeterministicFSM
 {
-    template <typename StateAssociatedObject, typename TriggerType>
+    template <typename TriggerType>
     class DeterministicFSM 
     {
     public:
-        DeterministicFSM(std::vector<State<StateAssociatedObject>> states, std::vector<Transition<StateAssociatedObject, TriggerType>> transitions, State<StateAssociatedObject> initialState) :
+        DeterministicFSM(std::vector<State> states, std::vector<Transition<TriggerType>> transitions, State initialState) :
             _states(states), _transitions(transitions), _currentState(initialState), _initialState(initialState) {}
 
         bool triggerEvent(TriggerType value)
@@ -26,20 +26,6 @@ namespace DeeterministicFSM
                 }
             }
             return false;
-        }
-
-        std::vector<StateAssociatedObject> GetTriggeredChainSignatures(std::vector<TriggerType> triggers)
-        {
-            std::vector<StateAssociatedObject> chain = {};
-            for (int i = 0; i < triggers.size(); i++)
-            {
-                if (triggerEvent(triggers[i]) == false)
-                {
-                    return chain;
-                }
-                chain.push_back(_currentState.GetSignature());
-            }
-            return chain;
         }
 
         std::vector<unsigned int> GetTriggeredChainIDs(std::vector<TriggerType> triggers)
@@ -77,10 +63,10 @@ namespace DeeterministicFSM
         }
 
     private:
-        State<StateAssociatedObject> _initialState;
-        State<StateAssociatedObject> _currentState;
-        std::vector<State<StateAssociatedObject>> _states;
-        std::vector<Transition<StateAssociatedObject, TriggerType>> _transitions;
+        State _initialState;
+        State _currentState;
+        std::vector<State> _states;
+        std::vector<Transition<TriggerType>> _transitions;
     };
 }
 

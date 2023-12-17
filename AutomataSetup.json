@@ -1,0 +1,51 @@
+{
+  "States": {
+    "1": false,
+    "2": false,
+    "3": false,
+    "4": true
+  },
+
+  "Transitions": {
+    "1": {
+      "from": "1",
+      "to": "2",
+      "trigger": "1"
+    },
+    "2": {
+      "from": "1",
+      "to": "1",
+      "trigger": "0"
+    },
+    "3": {
+      "from": "2",
+      "to": "2",
+      "trigger": "1"
+    },
+    "4": {
+      "from": "2",
+      "to": "3",
+      "trigger": "0"
+    },
+    "5": {
+      "from": "3",
+      "to": "1",
+      "trigger": "0"
+    },
+    "6": {
+      "from": "3",
+      "to": "4",
+      "trigger": "1"
+    },
+    "7": {
+      "from": "4",
+      "to": "3",
+      "trigger": "0"
+    },
+    "8": {
+      "from": "4",
+      "to": "2",
+      "trigger": "1"
+    }
+  }
+}
