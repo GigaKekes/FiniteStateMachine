@@ -6,26 +6,37 @@
 #include "State.h"
 #include "TransitionFunction.h"
 
+#include "JSONReader.h"
+                
 namespace DeeterministicFSM
 {
+    enum FSAResourceFileType
+    {
+        JSONFile
+    };
+
     template <typename TriggerType>
     class DeterministicFSM 
     {
     public:
         DeterministicFSM(std::vector<State> states, std::vector<Transition<TriggerType>> transitions, State initialState) :
             _states(states), _transitions(transitions), _currentState(initialState), _initialState(initialState) {}
-
-        bool triggerEvent(TriggerType value)
+        DeterministicFSM(std::string path, FSAResourceFileType resourceFileType)
         {
-            for (auto& transition : _transitions)
+            switch(resourceFileType)
             {
-                if (transition.GetFromState().GetID() == _currentState.GetID() && transition.GetTrigger() == value)
+                case(JSONFile):
                 {
-                    _currentState = transition.GetToState();
-                    return true;
+                    JSONReader jsonreader(path);
+
+                    _states = jsonreader.GetStates();
+                    _transitions = jsonreader.GetTransitions();
+                    _initialState = _states[0];
+                    _currentState = _states[0];
+                    
+                    break;
                 }
             }
-            return false;
         }
 
         std::vector<unsigned int> GetTriggeredChainIDs(std::vector<TriggerType> triggers)
@@ -57,6 +68,7 @@ namespace DeeterministicFSM
             }
             return false;
         }
+
         void Restart()
         {
             _currentState = _initialState;
@@ -67,6 +79,19 @@ namespace DeeterministicFSM
         State _currentState;
         std::vector<State> _states;
         std::vector<Transition<TriggerType>> _transitions;
+
+        bool triggerEvent(TriggerType value)
+        {
+            for (auto& transition : _transitions)
+            {
+                if (transition.GetFromState().GetID() == _currentState.GetID() && transition.GetTrigger() == value)
+                {
+                    _currentState = transition.GetToState();
+                    return true;
+                }
+            }
+            return false;
+        }
     };
 }
 

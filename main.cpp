@@ -14,11 +14,20 @@ void StringChainPatternTestUsingJSON();
 
 int main(int argc, char** argv)
 {
-	StringChainPatternTest();
+	StringChainPatternTestUsingJSON();
 
 	return 0;
 }
 
+std::vector<std::string> splitString(const std::string& input) {
+    std::vector<std::string> result;
+
+    for (char c : input) {
+        result.push_back(std::string(1, c));
+    }
+
+    return result;
+}
 
 void StateTemplateTest()
 {
@@ -92,5 +101,33 @@ void StringChainPatternTest()
 
 void StringChainPatternTestUsingJSON()
 {
+	//Constructing FSA for finding out if a string of symbols 1 and 0 contains "101" in it 
 	
+	//Path for our Json File
+	std::string path = "AutomataSetup.json";
+
+
+	//Constructing FSA
+	DeterministicFSM<std::string> fsm(path, FSAResourceFileType::JSONFile);
+
+	//Testing
+	std::string parsedString = "100011001100110010111010100010";
+	std::vector<std::string> s = splitString(parsedString);
+
+
+	std::vector<unsigned int> ids = fsm.GetTriggeredChainIDs(s);
+	fsm.Restart();
+	bool isTerminalStateReached = fsm.Run(s);
+	
+	std::cout << "Initial String:\t\t\t" << parsedString << std::endl;
+
+	std::cout << "State IDs history:\t\t";
+	for (int i = 0; i < ids.size(); i++)
+	{
+		std::cout << ids[i];
+	}
+
+	std::cout << std::endl;
+
+	std::cout << "Is terminal state reached:\t" << isTerminalStateReached << (isTerminalStateReached ? "(True)" : "(False)");
 }
