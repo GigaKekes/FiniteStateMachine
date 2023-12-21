@@ -366,5 +366,6 @@ FodyWeavers.xsd
 *.vcxproj
 *.vcxproj.filters
 *.sln
+/.vscode
 
 *.exe
