@@ -14,6 +14,7 @@
 
 namespace DeeterministicFSM
 {
+    template <typename TriggerType>
     class JSONReader
     {
     public:
@@ -48,7 +49,7 @@ namespace DeeterministicFSM
             {
                 State from;
                 State to;
-                std::string trigger;
+                TriggerType trigger;
                 for(State state : _states)
                 {
                     if (state.GetID() == _data["Transitions"][i]["from"].get<int>())
@@ -60,7 +61,7 @@ namespace DeeterministicFSM
                         to = state;
                     }
                 }
-                Transition<std::string> transition(from, to, _data["Transitions"][i]["trigger"].get<std::string>());
+                Transition<TriggerType> transition(from, to, _data["Transitions"][i]["trigger"].get<TriggerType>());
                 _transitions.push_back(transition);
                 
             }
@@ -71,7 +72,7 @@ namespace DeeterministicFSM
             return _states;
         }
 
-        std::vector<Transition<std::string>> GetTransitions()
+        std::vector<Transition<TriggerType>> GetTransitions()
         {
             return _transitions;
         }
@@ -79,7 +80,7 @@ namespace DeeterministicFSM
     private:
         nlohmann::json _data;
         std::vector<State> _states;
-        std::vector<Transition<std::string>> _transitions;
+        std::vector<Transition<TriggerType>> _transitions;
     };
 }
 

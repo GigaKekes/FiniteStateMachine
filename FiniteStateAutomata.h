@@ -27,7 +27,7 @@ namespace DeeterministicFSM
             {
                 case(JSONFile):
                 {
-                    JSONReader jsonreader(path);
+                    JSONReader<TriggerType> jsonreader(path);
 
                     _states = jsonreader.GetStates();
                     _transitions = jsonreader.GetTransitions();

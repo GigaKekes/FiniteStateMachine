@@ -11,10 +11,11 @@ using namespace DeeterministicFSM;
 void StateTemplateTest();
 void StringChainPatternTest();
 void StringChainPatternTestUsingJSON();
+void IntChainPatternTestUsingJSON();
 
 int main(int argc, char** argv)
 {
-	StringChainPatternTestUsingJSON();
+	IntChainPatternTestUsingJSON();
 
 	return 0;
 }
@@ -120,6 +121,37 @@ void StringChainPatternTestUsingJSON()
 	bool isTerminalStateReached = fsm.Run(s);
 	
 	std::cout << "Initial String:\t\t\t" << parsedString << std::endl;
+
+	std::cout << "State IDs history:\t\t";
+	for (int i = 0; i < ids.size(); i++)
+	{
+		std::cout << ids[i];
+	}
+
+	std::cout << std::endl;
+
+	std::cout << "Is terminal state reached:\t" << isTerminalStateReached << (isTerminalStateReached ? "(True)" : "(False)");
+}
+
+void IntChainPatternTestUsingJSON()
+{
+	//Constructing FSA for finding out if a string of symbols 1 and 0 contains "101" in it 
+	
+	//Path for our Json File
+	std::string path = "AutomataSetup2.json";
+
+
+	//Constructing FSA
+	DeterministicFSM<int> fsm(path, FSAResourceFileType::JSONFile);
+
+	//Testing
+	std::vector<int> s = {1,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,1,0,1,0,1,0,0,0,1,0};
+
+	std::vector<unsigned int> ids = fsm.GetTriggeredChainIDs(s);
+	fsm.Restart();
+	bool isTerminalStateReached = fsm.Run(s);
+	
+	std::cout << "Initial String:\t\t\t" << "100011001100110010111010100010" << std::endl;
 
 	std::cout << "State IDs history:\t\t";
 	for (int i = 0; i < ids.size(); i++)
